@@ -29,12 +29,17 @@ public class Trf
   {
     this.DataType=Integer.parseInt(eTrf.getElementsByTagName("DataType").item(0).getTextContent());
     this.Trim=Integer.parseInt(eTrf.getElementsByTagName("Trim").item(0).getTextContent());
-    if (DataType > 1) {
+
+    if (DataType == 3) {
       this.Escala=Integer.parseInt(eTrf.getElementsByTagName("Escala").item(0).getTextContent());
       this.SepDecimal=eTrf.getElementsByTagName("SepDecimal").item(0).getTextContent();
-      this.FechaFormato=eTrf.getElementsByTagName("FechaFormato").item(0).getTextContent();
-      this.Pos=Integer.parseInt(eTrf.getElementsByTagName("Pos").item(0).getTextContent());
     }
+
+    if (DataType == 4 || DataType == 5 || DataType == 6) {
+      this.FechaFormato=eTrf.getElementsByTagName("FechaFormato").item(0).getTextContent();
+    }
+
+      //this.Pos=Integer.parseInt(eTrf.getElementsByTagName("Pos").item(0).getTextContent());
 
     this.TipoRep=Integer.parseInt(eTrf.getElementsByTagName("TipoRep").item(0).getTextContent());
     if (TipoRep > 0) {
@@ -101,11 +106,11 @@ public class Trf
       case 4:
         //Solo Fin(Sufijo)
         String buscado=null;
-        int len=result.length();
+        int len=data.length();
         for (int r : Rangos) {
-          buscado=result.substring(len-r, len);
+          buscado=data.substring(len-r, len);
           if(Replace.containsKey(buscado)) {
-            result=result.substring(1, len-r) + Replace.get(buscado);
+            data=data.substring(1, len-r) + Replace.get(buscado);
             break;
           }
         }
@@ -130,6 +135,8 @@ public class Trf
         //Reorganiza signo
         if (data.contains("-")){
           result="-"+data.replace("-","");
+        } else {
+          if (data.equals("")) {result="0";}else{result=data;}
         }
         break;
       case 3:
@@ -152,17 +159,22 @@ public class Trf
         break;
       case 4:
         //Date
-        DateFormat dfi = new SimpleDateFormat(FechaFormato);
-        DateFormat dfo = new SimpleDateFormat("yyyy-MM-dd");
-        result = dfo.format(dfi.parse(data));
+        DateFormat dfid = new SimpleDateFormat(FechaFormato);
+        DateFormat dfod = new SimpleDateFormat("yyyy-MM-dd'T00:00:00Z'");
+        result = dfod.format(dfid.parse(data));
         break;
       case 5:   
         //Time
-        result = data;
+        DateFormat dfit = new SimpleDateFormat(FechaFormato);
+        DateFormat dfot = new SimpleDateFormat("HH:mm:ss");
+        result = dfot.format(dfit.parse(data));
         break;
       case 6: 
-        //TimeStamp
-        result = data;
+        //DateTime
+        DateFormat dfidt = new SimpleDateFormat(FechaFormato);
+        DateFormat dfodt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        result = dfodt.format(dfidt.parse(data));
+        break;
       }
     }
     catch (Exception e) {throw e;}

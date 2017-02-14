@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
-<movistar>
+<ibd_lf>
   <global>
-    <queuelength>1000</queuelength>
+    <queuelength>20000</queuelength>
     <queuesleep>50</queuesleep>
-    <tica>true</tica>
-    <preregex>false</preregex>
-    <denormalize>true</denormalize>
+    <excelcnv>false</excelcnv>
+    <usetika>false</usetika>
+    <dncelda>false</dncelda>
+    <dntitular>false</dntitular>
   </global>
   <reader>
     <regend>crlf</regend>
@@ -13,31 +14,34 @@
   <proc>
     <EstReg>1</EstReg> <!--LongFija=1, Delimitado=2-->
     <RegDelim></RegDelim> <!--Separador de campo para el caso delimitado-->
-    <design id="comunicaciones_ST">
+    <ProcControl>2</ProcControl><!--0,1,n inserts por reg=0; 1,n inserts por reg=1; 1 insert por reg=2-->
+    <design id="comunicaciones">
       <Destino>comunicaciones</Destino>
       <ident id="1">
-        <TipoIdent>4</TipoIdent> <!--Codigo=1, PosReg=2, Rango=3, Regex=4-->
+        <TipoIdent>1</TipoIdent> <!--Codigo=1, PosReg=2, Rango=3, Regex=4-->
         <CodigoPos></CodigoPos> 
         <RegDesde></RegDesde>
         <RegHasta></RegHasta>
         <ClaveCampo></ClaveCampo>
-        <ClaveDesde></ClaveDesde>
-        <ClaveHasta></ClaveHasta>
-        <Claves></Claves>
-        <Regex>^\d{2}\/\d{2}\/\d{4}\s\d{2}\:\d{2}\:\d{2}\s\d{11}\s{6}[S|T]</Regex>
-        <Match>true</Match> <!--false, true-->
+        <ClaveDesde>1</ClaveDesde>
+        <ClaveHasta>3</ClaveHasta>
+        <Claves>D01</Claves>
+        <Regex></Regex>
+        <Match></Match> <!--false, true-->
       </ident>
       <map id="1">
-        <Campo>Fecha_origen</Campo>
+        <Campo>Red_Origen</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>1</PosDesde>
-        <PosHasta>19</PosHasta>
+        <PosDesde>4</PosDesde>
+        <PosHasta>18</PosHasta>
         <trf>
           <DataType>1</DataType>
           <Escala></Escala>
           <SepDecimal></SepDecimal>
           <FechaFormato></FechaFormato>
-          <Trim>0</Trim>
+          <Trim>1</Trim>
           <TipoRep>0</TipoRep>
           <Pos></Pos>
           <Replace id="1">
@@ -47,10 +51,12 @@
         </trf>
       </map>
       <map id="2">
-        <Campo>Nro_origen</Campo>
+        <Campo>Nro_Origen</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>21</PosDesde>
-        <PosHasta>31</PosHasta>
+        <PosDesde>19</PosDesde>
+        <PosHasta>32</PosHasta>
         <trf>
           <DataType>1</DataType>
           <Escala></Escala>
@@ -66,10 +72,33 @@
         </trf>
       </map>
       <map id="3">
-        <Campo>Nro_destino</Campo>
+        <Campo>Fecha_Origen</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>42</PosDesde>
-        <PosHasta>52</PosHasta>
+        <PosDesde>33</PosDesde>
+        <PosHasta>46</PosHasta>
+        <trf>
+          <DataType>6</DataType>
+          <Escala></Escala>
+          <SepDecimal></SepDecimal>
+          <FechaFormato>yyyyMMddHHmmss</FechaFormato>
+          <Trim>1</Trim>
+          <TipoRep>0</TipoRep>
+          <Pos></Pos>
+          <Replace id="1">
+            <calve></calve>
+            <valor></valor>
+          </Replace>
+        </trf>
+      </map>
+      <map id="4">
+        <Campo>Red_Destino</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
+        <PosRel></PosRel>
+        <PosDesde>47</PosDesde>
+        <PosHasta>61</PosHasta>
         <trf>
           <DataType>1</DataType>
           <Escala></Escala>
@@ -84,30 +113,13 @@
           </Replace>
         </trf>
       </map>
-      <map id="4">
-        <Campo>Duracion</Campo>
-        <PosRel></PosRel>
-        <PosDesde>58</PosDesde>
-        <PosHasta>65</PosHasta>
-        <trf>
-          <DataType>1</DataType>
-          <Escala></Escala>
-          <SepDecimal></SepDecimal>
-          <FechaFormato></FechaFormato>
-          <Trim>0</Trim>
-          <TipoRep>0</TipoRep>
-          <Pos></Pos>
-          <Replace id="1">
-            <calve></calve>
-            <valor></valor>
-          </Replace>
-        </trf>
-      </map>
       <map id="5">
-        <Campo>Celda</Campo>
+        <Campo>Nro_Destino</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>68</PosDesde>
-        <PosHasta>74</PosHasta>
+        <PosDesde>62</PosDesde>
+        <PosHasta>75</PosHasta>
         <trf>
           <DataType>1</DataType>
           <Escala></Escala>
@@ -123,68 +135,17 @@
         </trf>
       </map>
       <map id="6">
-        <Campo>Linea</Campo>
+        <Campo>Fecha_Destino</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>1</PosDesde>
-        <PosHasta>110</PosHasta>
+        <PosDesde>76</PosDesde>
+        <PosHasta>89</PosHasta>
         <trf>
-          <DataType>1</DataType>
+          <DataType>6</DataType>
           <Escala></Escala>
           <SepDecimal></SepDecimal>
-          <FechaFormato></FechaFormato>
-          <Trim>0</Trim>
-          <TipoRep>0</TipoRep>
-          <Pos></Pos>
-          <Replace id="1">
-            <calve></calve>
-            <valor></valor>
-          </Replace>
-        </trf>
-      </map>
-    </design>
-    <design id="comunicaciones_E">
-      <Destino>comunicaciones</Destino>
-      <ident id="1">
-        <TipoIdent>4</TipoIdent> <!--Codigo=1, PosReg=2, Rango=3, Regex=4-->
-        <CodigoPos></CodigoPos> 
-        <RegDesde></RegDesde>
-        <RegHasta></RegHasta>
-        <ClaveCampo></ClaveCampo>
-        <ClaveDesde></ClaveDesde>
-        <ClaveHasta></ClaveHasta>
-        <Claves></Claves>
-        <Regex>^\d{2}\/\d{2}\/\d{4}\s\d{2}\:\d{2}\:\d{2}\s\d{11}\s{6}E</Regex>
-        <Match>true</Match> <!--false, true-->
-      </ident>
-      <map id="1">
-        <Campo>Fecha_origen</Campo>
-        <PosRel></PosRel>
-        <PosDesde>1</PosDesde>
-        <PosHasta>19</PosHasta>
-        <trf>
-          <DataType>1</DataType>
-          <Escala></Escala>
-          <SepDecimal></SepDecimal>
-          <FechaFormato></FechaFormato>
-          <Trim>0</Trim>
-          <TipoRep>0</TipoRep>
-          <Pos></Pos>
-          <Replace id="1">
-            <calve></calve>
-            <valor></valor>
-          </Replace>
-        </trf>
-      </map>
-      <map id="2">
-        <Campo>Nro_origen</Campo>
-        <PosRel></PosRel>
-        <PosDesde>42</PosDesde>
-        <PosHasta>52</PosHasta>
-        <trf>
-          <DataType>1</DataType>
-          <Escala></Escala>
-          <SepDecimal></SepDecimal>
-          <FechaFormato></FechaFormato>
+          <FechaFormato>yyyyMMddHHmmss</FechaFormato>
           <Trim>1</Trim>
           <TipoRep>0</TipoRep>
           <Pos></Pos>
@@ -194,54 +155,18 @@
           </Replace>
         </trf>
       </map>
-      <map id="3">
-        <Campo>Nro_destino</Campo>
-        <PosRel></PosRel>
-        <PosDesde>21</PosDesde>
-        <PosHasta>31</PosHasta>
-        <trf>
-          <DataType>1</DataType>
-          <Escala></Escala>
-          <SepDecimal></SepDecimal>
-          <FechaFormato></FechaFormato>
-          <Trim>1</Trim>
-          <TipoRep>0</TipoRep>
-          <Pos></Pos>
-          <Replace id="1">
-            <calve></calve>
-            <valor></valor>
-          </Replace>
-        </trf>
-      </map>
-      <map id="4">
+      <map id="7">
         <Campo>Duracion</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>58</PosDesde>
-        <PosHasta>65</PosHasta>
+        <PosDesde>90</PosDesde>
+        <PosHasta>95</PosHasta>
         <trf>
-          <DataType>1</DataType>
+          <DataType>5</DataType>
           <Escala></Escala>
           <SepDecimal></SepDecimal>
-          <FechaFormato></FechaFormato>
-          <Trim>0</Trim>
-          <TipoRep>0</TipoRep>
-          <Pos></Pos>
-          <Replace id="1">
-            <calve></calve>
-            <valor></valor>
-          </Replace>
-        </trf>
-      </map>
-      <map id="5">
-        <Campo>Celda</Campo>
-        <PosRel></PosRel>
-        <PosDesde>68</PosDesde>
-        <PosHasta>74</PosHasta>
-        <trf>
-          <DataType>1</DataType>
-          <Escala></Escala>
-          <SepDecimal></SepDecimal>
-          <FechaFormato></FechaFormato>
+          <FechaFormato>ss</FechaFormato>
           <Trim>1</Trim>
           <TipoRep>0</TipoRep>
           <Pos></Pos>
@@ -251,17 +176,19 @@
           </Replace>
         </trf>
       </map>
-      <map id="6">
-        <Campo>Linea</Campo>
+      <map id="8">
+        <Campo>Tipo_Comunicacion</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>1</PosDesde>
+        <PosDesde>96</PosDesde>
         <PosHasta>110</PosHasta>
         <trf>
           <DataType>1</DataType>
           <Escala></Escala>
           <SepDecimal></SepDecimal>
           <FechaFormato></FechaFormato>
-          <Trim>0</Trim>
+          <Trim>1</Trim>
           <TipoRep>0</TipoRep>
           <Pos></Pos>
           <Replace id="1">
@@ -270,26 +197,13 @@
           </Replace>
         </trf>
       </map>
-    </design>
-    <design id="celdas">
-      <Destino>celdas</Destino>
-      <ident id="1">
-        <TipoIdent>4</TipoIdent> <!--Codigo=1, PosReg=2, Rango=3, Regex=4-->
-        <CodigoPos></CodigoPos> 
-        <RegDesde></RegDesde>
-        <RegHasta></RegHasta>
-        <ClaveCampo></ClaveCampo>
-        <ClaveDesde></ClaveDesde>
-        <ClaveHasta></ClaveHasta>
-        <Claves></Claves>
-        <Regex>^[A-Z0-9]{7}\s[A-Za-z]</Regex>
-        <Match>true</Match> <!--false, true-->
-      </ident>
-      <map id="1">
-        <Campo>Celda</Campo>
+      <map id="9">
+        <Campo>Celda_Origen</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>1</PosDesde>
-        <PosHasta>7</PosHasta>
+        <PosDesde>111</PosDesde>
+        <PosHasta>120</PosHasta>
         <trf>
           <DataType>1</DataType>
           <Escala></Escala>
@@ -304,11 +218,13 @@
           </Replace>
         </trf>
       </map>
-      <map id="2">
-        <Campo>Direccion</Campo>
+      <map id="10">
+        <Campo>Celda_Direccion</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>9</PosDesde>
-        <PosHasta>58</PosHasta>
+        <PosDesde>121</PosDesde>
+        <PosHasta>170</PosHasta>
         <trf>
           <DataType>1</DataType>
           <Escala></Escala>
@@ -323,11 +239,13 @@
           </Replace>
         </trf>
       </map>
-      <map id="3">
-        <Campo>Ciudad</Campo>
+      <map id="11">
+        <Campo>Celda_Ciudad</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>60</PosDesde>
-        <PosHasta>79</PosHasta>
+        <PosDesde>171</PosDesde>
+        <PosHasta>190</PosHasta>
         <trf>
           <DataType>1</DataType>
           <Escala></Escala>
@@ -342,11 +260,13 @@
           </Replace>
         </trf>
       </map>
-      <map id="4">
-        <Campo>Provincia</Campo>
+      <map id="12">
+        <Campo>Celda_Provincia</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>81</PosDesde>
-        <PosHasta>101</PosHasta>
+        <PosDesde>191</PosDesde>
+        <PosHasta>210</PosHasta>
         <trf>
           <DataType>1</DataType>
           <Escala></Escala>
@@ -361,17 +281,19 @@
           </Replace>
         </trf>
       </map>
-      <map id="5">
-        <Campo>Linea</Campo>
+      <map id="13">
+        <Campo>Celda_Num</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>1</PosDesde>
-        <PosHasta>110</PosHasta>
+        <PosDesde>211</PosDesde>
+        <PosHasta>214</PosHasta>
         <trf>
           <DataType>1</DataType>
           <Escala></Escala>
           <SepDecimal></SepDecimal>
           <FechaFormato></FechaFormato>
-          <Trim>0</Trim>
+          <Trim>1</Trim>
           <TipoRep>0</TipoRep>
           <Pos></Pos>
           <Replace id="1">
@@ -380,44 +302,187 @@
           </Replace>
         </trf>
       </map>
-    </design>
-    <design id="descartado">
-      <Destino>descartado</Destino>
-      <ident id="1">
-        <TipoIdent>4</TipoIdent> <!--Codigo=1, PosReg=2, Rango=3, Regex=4-->
-        <CodigoPos></CodigoPos> 
-        <RegDesde></RegDesde>
-        <RegHasta></RegHasta>
-        <ClaveCampo></ClaveCampo>
-        <ClaveDesde></ClaveDesde>
-        <ClaveHasta></ClaveHasta>
-        <Claves></Claves>
-        <Regex>^\d{2}\/\d{2}\/\d{4}\s\d{2}\:\d{2}\:\d{2}\s\d{11}\s{6}[S|T|E]</Regex>
-        <Match>false</Match> <!--false, true-->
-      </ident>
-      <ident id="2">
-        <TipoIdent>4</TipoIdent> <!--Codigo=1, PosReg=2, Rango=3, Regex=4-->
-        <CodigoPos></CodigoPos> 
-        <RegDesde></RegDesde>
-        <RegHasta></RegHasta>
-        <ClaveCampo></ClaveCampo>
-        <ClaveDesde></ClaveDesde>
-        <ClaveHasta></ClaveHasta>
-        <Claves></Claves>
-        <Regex>^[A-Z0-9]{7}\s[A-Za-z]</Regex>
-        <Match>false</Match> <!--false, true-->
-      </ident>
-      <map id="1">
-        <Campo>Linea</Campo>
+      <map id="14">
+        <Campo>Celda_Descripcion</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
         <PosRel></PosRel>
-        <PosDesde>1</PosDesde>
-        <PosHasta>110</PosHasta>
+        <PosDesde>215</PosDesde>
+        <PosHasta>239</PosHasta>
         <trf>
           <DataType>1</DataType>
           <Escala></Escala>
           <SepDecimal></SepDecimal>
           <FechaFormato></FechaFormato>
-          <Trim>0</Trim>
+          <Trim>1</Trim>
+          <TipoRep>0</TipoRep>
+          <Pos></Pos>
+          <Replace id="1">
+            <calve></calve>
+            <valor></valor>
+          </Replace>
+        </trf>
+      </map>
+      <map id="15">
+        <Campo>Destinatario_Nombre</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
+        <PosRel></PosRel>
+        <PosDesde>240</PosDesde>
+        <PosHasta>277</PosHasta>
+        <trf>
+          <DataType>1</DataType>
+          <Escala></Escala>
+          <SepDecimal></SepDecimal>
+          <FechaFormato></FechaFormato>
+          <Trim>1</Trim>
+          <TipoRep>0</TipoRep>
+          <Pos></Pos>
+          <Replace id="1">
+            <calve></calve>
+            <valor></valor>
+          </Replace>
+        </trf>
+      </map>
+      <map id="16">
+        <Campo>Destinatario_DNI</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
+        <PosRel></PosRel>
+        <PosDesde>278</PosDesde>
+        <PosHasta>285</PosHasta>
+        <trf>
+          <DataType>1</DataType>
+          <Escala></Escala>
+          <SepDecimal></SepDecimal>
+          <FechaFormato></FechaFormato>
+          <Trim>1</Trim>
+          <TipoRep>0</TipoRep>
+          <Pos></Pos>
+          <Replace id="1">
+            <calve></calve>
+            <valor></valor>
+          </Replace>
+        </trf>
+      </map>
+      <map id="17">
+        <Campo>Destinatario_Direccion</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
+        <PosRel></PosRel>
+        <PosDesde>286</PosDesde>
+        <PosHasta>335</PosHasta>
+        <trf>
+          <DataType>1</DataType>
+          <Escala></Escala>
+          <SepDecimal></SepDecimal>
+          <FechaFormato></FechaFormato>
+          <Trim>1</Trim>
+          <TipoRep>0</TipoRep>
+          <Pos></Pos>
+          <Replace id="1">
+            <calve></calve>
+            <valor></valor>
+          </Replace>
+        </trf>
+      </map>
+      <map id="18">
+        <Campo>Destinatario_Ciudad</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
+        <PosRel></PosRel>
+        <PosDesde>336</PosDesde>
+        <PosHasta>355</PosHasta>
+        <trf>
+          <DataType>1</DataType>
+          <Escala></Escala>
+          <SepDecimal></SepDecimal>
+          <FechaFormato></FechaFormato>
+          <Trim>1</Trim>
+          <TipoRep>0</TipoRep>
+          <Pos></Pos>
+          <Replace id="1">
+            <calve></calve>
+            <valor></valor>
+          </Replace>
+        </trf>
+      </map>
+      <map id="19">
+        <Campo>Destinatario_Provincia</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
+        <PosRel></PosRel>
+        <PosDesde>356</PosDesde>
+        <PosHasta>375</PosHasta>
+        <trf>
+          <DataType>1</DataType>
+          <Escala></Escala>
+          <SepDecimal></SepDecimal>
+          <FechaFormato></FechaFormato>
+          <Trim>1</Trim>
+          <TipoRep>0</TipoRep>
+          <Pos></Pos>
+          <Replace id="1">
+            <calve></calve>
+            <valor></valor>
+          </Replace>
+        </trf>
+      </map>
+      <map id="20">
+        <Campo>Destinatario_Telefonos</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
+        <PosRel></PosRel>
+        <PosDesde>376</PosDesde>
+        <PosHasta>389</PosHasta>
+        <trf>
+          <DataType>1</DataType>
+          <Escala></Escala>
+          <SepDecimal></SepDecimal>
+          <FechaFormato></FechaFormato>
+          <Trim>1</Trim>
+          <TipoRep>0</TipoRep>
+          <Pos></Pos>
+          <Replace id="1">
+            <calve></calve>
+            <valor></valor>
+          </Replace>
+        </trf>
+      </map>
+      <map id="21">
+        <Campo>Estado</Campo>
+        <Fuente>1</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
+        <PosRel></PosRel>
+        <PosDesde>390</PosDesde>
+        <PosHasta>393</PosHasta>
+        <trf>
+          <DataType>1</DataType>
+          <Escala></Escala>
+          <SepDecimal></SepDecimal>
+          <FechaFormato></FechaFormato>
+          <Trim>1</Trim>
+          <TipoRep>0</TipoRep>
+          <Pos></Pos>
+          <Replace id="1">
+            <calve></calve>
+            <valor></valor>
+          </Replace>
+        </trf>
+      </map>
+      <map id="22">
+        <Campo>RegNum</Campo>
+        <Fuente>2</Fuente> <!--Archivo=1, ContadorReg=2, ValorFijo=3-->
+        <ValorFijo></ValorFijo>
+        <PosRel></PosRel>
+        <PosDesde></PosDesde>
+        <PosHasta></PosHasta>
+        <trf>
+          <DataType>1</DataType>
+          <Escala></Escala>
+          <SepDecimal></SepDecimal>
+          <FechaFormato></FechaFormato>
+          <Trim>1</Trim>
           <TipoRep>0</TipoRep>
           <Pos></Pos>
           <Replace id="1">
@@ -429,8 +494,7 @@
     </design>
   </proc>
   <insert>
+    <BatchSize>5000</BatchSize>
     <url id="comunicaciones">http://192.168.2.45:8983/solr/comunicaciones</url>
-    <url id="celdas">http://192.168.2.45:8983/solr/celdas</url>
-    <url id="descartado">http://192.168.2.45:8983/solr/descartado</url>
   </insert>
-</movistar>
+</ibd_lf>

@@ -22,10 +22,11 @@ public class Proc extends Thread
   private int EstReg=0;
   private String RegDelim=null;
   private int QueueSleep=50;
+  private int ProcControl=0;
 
   private ArrayList<Design> Designs=new ArrayList<Design> ();
 
-  public Proc(MTCom mtc, NodeList nlProc, BlockingQueue bqr, BlockingQueue bqi, int QueueSleep) throws Exception
+  public Proc(MTCom mtc, NodeList nlProc, BlockingQueue<String> bqr, BlockingQueue<Register> bqi, int QueueSleep) throws Exception
   {
     this.mtc=mtc;
     this.ReadQueue=bqr;
@@ -38,6 +39,7 @@ public class Proc extends Thread
 
     EstReg=Integer.parseInt(eProc.getElementsByTagName("EstReg").item(0).getTextContent());
     RegDelim=eProc.getElementsByTagName("RegDelim").item(0).getTextContent();
+    ProcControl=Integer.parseInt(eProc.getElementsByTagName("ProcControl").item(0).getTextContent());
 
     NodeList nlDesign =  eProc.getElementsByTagName("design");
     for (int p = 0; p < nlDesign.getLength(); p++) {
@@ -56,26 +58,34 @@ public class Proc extends Thread
   public void run()
   {
     int RegNum=0;
+    int IdentCount=0;
     Register reg=null;
     String line=null;
-
     try
     {
       //Consumidor-Productor
       while (mtc.Continuar() && (ReadQueue.size()>0 || mtc.FinProd()==false)) {
+        IdentCount=0;
         line=ReadQueue.poll(QueueSleep, TimeUnit.MILLISECONDS);
 
         if (line != null) {
           RegNum++;
           mtc.setCountMasUno();
-          Design.SetLine(line, RegNum, (ReadQueue.size()==0 && mtc.FinProd()==true));
           for (Design d : Designs) {
+            d.SetLine(line, RegNum, (ReadQueue.size()==0 && mtc.FinProd()==true));
             if (d.Identificado()==true)
             {
+              IdentCount++;
               reg=d.GetRegister();
               while(InsertQueue.offer(reg, QueueSleep, TimeUnit.MILLISECONDS) == false && mtc.Continuar()){}
             }
           }
+        }
+        if (ProcControl == 2) {
+          if (IdentCount > 1) {throw new Exception("Error, se identifico mas de un diseño para el reguistro numero: " + RegNum);}
+          if (IdentCount < 1) {throw new Exception("Error, no se pudo identificar diseño para el reguistro numero: " + RegNum);}
+        } else if (ProcControl == 1) {
+          if (IdentCount < 1) {throw new Exception("Error, no se pudo identificar diseño para el reguistro numero: " + RegNum);}
         }
       }
       //Fin proceso Consumidor-Productor

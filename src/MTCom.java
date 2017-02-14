@@ -12,7 +12,6 @@ public class MTCom
   private boolean errflag=false;
   private String errDesc="";
   private String errStack="";
-
   public MTCom()
   {
 

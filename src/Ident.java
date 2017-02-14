@@ -6,9 +6,9 @@ import java.util.regex.Pattern;
 
 public class Ident
 {
-  private static String RegData=null;
-  private static int RegNum=0;
-  private static boolean Ultimo=false;
+  private String RegData=null;
+  private int RegNum=0;
+  private boolean Ultimo=false;
 
   private int TipoIdent=0;
   private int CodigoPos=0;
@@ -62,7 +62,7 @@ public class Ident
     this.RegDelim=RegDelim;
   }
 
-  public static void SetRegistro(String reg, int regnum, boolean ultimo)
+  public void SetRegistro(String reg, int regnum, boolean ultimo)
   {
     RegData=reg;
     RegNum=regnum;

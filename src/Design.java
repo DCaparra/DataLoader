@@ -9,9 +9,9 @@ import java.util.HashMap;
 
 public class Design
 {
-  private static String RegData=null;
-  private static int RegNum=0;
-  private static boolean Ultimo=false;
+  private String RegData=null;
+  private int RegNum=0;
+  private boolean Ultimo=false;
 
   private String destino=null;
   private int EstReg=0;
@@ -51,13 +51,19 @@ public class Design
     //Fin Lee diseños
   }
 
-  public static void SetLine(String reg, int regnum, boolean ultimo)
+  public void SetLine(String reg, int regnum, boolean ultimo)
   {
     RegData=reg;
     RegNum=regnum;
     Ultimo=ultimo;
-    Ident.SetRegistro(RegData, RegNum, Ultimo);
-    Map.SetRegistro(RegData);
+
+    for (Ident i : Idents) {
+      i.SetRegistro(RegData, RegNum, Ultimo);
+    }
+
+    for (Map m : Maps) {
+      m.SetRegistro(RegData, RegNum);
+    }
   }
 
   public boolean Identificado()

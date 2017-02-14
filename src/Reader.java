@@ -20,7 +20,7 @@ public class Reader extends Thread
   private BlockingQueue<String> ReadQueue=null;
   private int QueueSleep=50;
 
-  public Reader(MTCom mtc, NodeList nlReader, BlockingQueue bq, int QueueSleep, File fileorg) throws Exception
+  public Reader(MTCom mtc, NodeList nlReader, BlockingQueue<String> bq, int QueueSleep, File fileorg) throws Exception
   {
     this.mtc=mtc;
     this.ReadQueue=bq;
@@ -62,7 +62,6 @@ public class Reader extends Thread
     catch (Exception e){
       mtc.setError(e);
     }
-
     mtc.setFinProc(true);
   }
 }

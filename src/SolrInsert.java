@@ -18,6 +18,9 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class SolrInsert extends Thread
 {  
   private NodeList nlInsert=null;
@@ -26,8 +29,9 @@ public class SolrInsert extends Thread
   private MTCom mtc=null;
   private HashMap<String, SolrClient> cores=null;
   private HashMap<String, String> FixValues=null;
+  private int BatchSize=1;
 
-  public SolrInsert(MTCom mtc, NodeList nlInsert, BlockingQueue bq, int QueueSleep, HashMap<String, String> FixValues)  throws Exception
+  public SolrInsert(MTCom mtc, NodeList nlInsert, BlockingQueue<Register> bq, int QueueSleep, HashMap<String, String> FixValues)  throws Exception
   {
     this.mtc=mtc;
     this.nlInsert=nlInsert;
@@ -39,6 +43,8 @@ public class SolrInsert extends Thread
 
     Node nInsert = nlInsert.item(0);
     Element eInsert = (Element) nInsert;
+
+    BatchSize=Integer.parseInt(eInsert.getElementsByTagName("BatchSize").item(0).getTextContent());
 
     NodeList nlUrl =  eInsert.getElementsByTagName("url");
     for (int i = 0; i < nlUrl.getLength(); i++) {
@@ -55,29 +61,45 @@ public class SolrInsert extends Thread
   public void run()
   {
     Register reg=null;
+    Collection<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
+    SolrClient solr = null;
+    int count=0;
+    UpdateResponse response = null;
+    String design=null;
 
     try
     {
-      while (mtc.Continuar() && (InsertQueue.size()>0 || mtc.FinProd()==false))
+      reg=read(mtc, InsertQueue, QueueSleep);
+      while (reg != null)
       {
-        reg=InsertQueue.poll(QueueSleep, TimeUnit.MILLISECONDS);
-        SolrClient solr = cores.get(reg.GetDesign());
-        SolrInputDocument document = new SolrInputDocument();
+        design=reg.GetDesign();
+        while (reg != null && count < BatchSize && design == reg.GetDesign())
+        {
+          SolrInputDocument document = new SolrInputDocument();
 
-        for(Map.Entry<String, String> entry : FixValues.entrySet()) {
-          document.addField(entry.getKey(), entry.getValue());
+          for(Map.Entry<String, String> entry : FixValues.entrySet()) {
+            document.addField(entry.getKey(), entry.getValue());
+          }
+
+          HashMap<String, String> m = reg.GetItems();
+          for(Map.Entry<String, String> entry : m.entrySet()) {
+            document.addField(entry.getKey(), entry.getValue());
+          }
+
+          docs.add(document);
+          mtc.setCountMasUno();
+          count++;
+          reg=read(mtc, InsertQueue, QueueSleep);
         }
 
-        HashMap<String, String> m = reg.GetItems();
-        for(Map.Entry<String, String> entry : m.entrySet()) {
-          document.addField(entry.getKey(), entry.getValue());
-        }
-
-	UpdateResponse response = solr.add(document);
-        mtc.setCountMasUno();
+        solr=cores.get(design);
+        response=solr.add(docs);
+        count=0;
+        docs.clear();
       }
+
       for(Map.Entry<String, SolrClient> entry : cores.entrySet()) {
-        SolrClient solr=entry.getValue();
+        solr=entry.getValue();
         solr.commit();
       }
     }
@@ -88,6 +110,16 @@ public class SolrInsert extends Thread
       mtc.setError(e);
     }
     mtc.setFinProc(true);
+  }
+
+  private Register read(MTCom mtc, BlockingQueue<Register> InsertQueue, int QS) throws InterruptedException
+  {
+    Register reg=null;
+    while (reg == null && mtc.Continuar() && (InsertQueue.size()>0 || mtc.FinProd()==false))
+    {
+      reg=InsertQueue.poll(QS, TimeUnit.MILLISECONDS);
+    }
+    return reg;
   }
 }
 
