@@ -78,11 +78,13 @@ public class Design
   public Register GetRegister() throws Exception
   {
     Register reg=new Register();
+    String value=null;
 
     reg.SetDesign(destino);
     for (Map M : Maps) {
       try {
-        reg.PutItem(M.GetField(), M.GetValue());
+        value=M.GetValue();
+        if (value != null) {reg.PutItem(M.GetField(), value);}
       }
       catch (Exception e) {throw e;}
     }

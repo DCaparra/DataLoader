@@ -108,10 +108,12 @@ public class Trf
         String buscado=null;
         int len=data.length();
         for (int r : Rangos) {
-          buscado=data.substring(len-r, len);
-          if(Replace.containsKey(buscado)) {
-            data=data.substring(1, len-r) + Replace.get(buscado);
-            break;
+          if (len >= r) {
+            buscado=data.substring(len-r, len);
+            if(Replace.containsKey(buscado)) {
+              data=data.substring(0, len-r) + Replace.get(buscado);
+              break;
+            }
           }
         }
         break;
@@ -132,48 +134,70 @@ public class Trf
         break;
       case 2:
         //Int
-        //Reorganiza signo
-        if (data.contains("-")){
-          result="-"+data.replace("-","");
+        if (!data.equals("")) {
+
+          //Reorganiza signo
+          if (data.contains("-")){
+            result="-"+data.replace("-","");
+          } else {
+            result=data;
+          }
         } else {
-          if (data.equals("")) {result="0";}else{result=data;}
+          result=null;
         }
         break;
       case 3:
         //Double
-        //Reorganiza signo
-        if (data.contains("-")){
-          result="-"+data.replace("-","");
-        }
-        //Arregla coma
-        if (data.contains(SepDecimal) && (SepDecimal.length()>0)){
-          if(SepDecimal==","){
-            result=data.replace(".","");
-            result=data.replace(",",".");
+        if (!data.equals("")) {
+
+          //Reorganiza signo
+          if (data.contains("-")){
+            result="-"+data.replace("-","");
+          }
+          //Arregla coma
+          if (data.contains(SepDecimal) && (SepDecimal.length()>0)){
+            if(SepDecimal==","){
+              result=data.replace(".","");
+              result=data.replace(",",".");
+            } else {
+              result=data.replace(",","");
+            }
           } else {
-            result=data.replace(",","");
+            result=data.substring(0, data.length()-Escala) + "." + data.substring(data.length()-Escala, data.length());
           }
         } else {
-          result=data.substring(0, data.length()-Escala) + "." + data.substring(data.length()-Escala, data.length());
+          result=null;
         }
         break;
       case 4:
         //Date
-        DateFormat dfid = new SimpleDateFormat(FechaFormato);
-        DateFormat dfod = new SimpleDateFormat("yyyy-MM-dd'T00:00:00Z'");
-        result = dfod.format(dfid.parse(data));
+        if (!data.equals("")) {
+          DateFormat dfid = new SimpleDateFormat(FechaFormato);
+          DateFormat dfod = new SimpleDateFormat("yyyy-MM-dd'T00:00:00Z'");
+          result = dfod.format(dfid.parse(data));
+        } else {
+          result=null;
+        }
         break;
       case 5:   
         //Time
-        DateFormat dfit = new SimpleDateFormat(FechaFormato);
-        DateFormat dfot = new SimpleDateFormat("HH:mm:ss");
-        result = dfot.format(dfit.parse(data));
+        if (!data.equals("")) {
+          DateFormat dfit = new SimpleDateFormat(FechaFormato);
+          DateFormat dfot = new SimpleDateFormat("HH:mm:ss");
+          result = dfot.format(dfit.parse(data));
+        } else {
+          result=null;
+        }
         break;
       case 6: 
         //DateTime
-        DateFormat dfidt = new SimpleDateFormat(FechaFormato);
-        DateFormat dfodt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        result = dfodt.format(dfidt.parse(data));
+        if (!data.equals("")) {
+          DateFormat dfidt = new SimpleDateFormat(FechaFormato);
+          DateFormat dfodt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+          result = dfodt.format(dfidt.parse(data));
+        } else {
+          result=null;
+        }
         break;
       }
     }
